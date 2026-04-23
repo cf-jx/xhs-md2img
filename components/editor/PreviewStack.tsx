@@ -6,7 +6,7 @@ import { getTheme } from '@/lib/themes/registry';
 import { SIZE_PRESETS } from '@/lib/themes/types';
 import { paginate } from '@/lib/markdown/paginate';
 import { MarkdownCard } from '@/components/render/MarkdownCard';
-import { TEMPLATES } from '@/lib/templates';
+import { getCoverArt } from '@/lib/covers/registry';
 
 type Props = {
   registerRefs: (els: HTMLDivElement[]) => void;
@@ -14,14 +14,14 @@ type Props = {
 
 export function PreviewStack({ registerRefs }: Props) {
   const md = useEditorStore((s) => s.md);
-  const setMd = useEditorStore((s) => s.setMd);
-  const setThemeId = useEditorStore((s) => s.setThemeId);
   const themeId = useEditorStore((s) => s.themeId);
+  const coverArtId = useEditorStore((s) => s.coverArtId);
   const sizeId = useEditorStore((s) => s.sizeId);
   const footer = useEditorStore((s) => s.footer);
   const scale = useEditorStore((s) => s.previewScale);
 
   const theme = useMemo(() => getTheme(themeId), [themeId]);
+  const coverArt = useMemo(() => getCoverArt(coverArtId), [coverArtId]);
   const isEmpty = md.trim().length === 0;
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -94,7 +94,7 @@ export function PreviewStack({ registerRefs }: Props) {
       {isEmpty ? (
         <div className="px-10 py-16 flex flex-col items-center">
           <div
-            className="w-full max-w-[520px] flex flex-col gap-8 rise-in"
+            className="w-full max-w-[520px] flex flex-col gap-6 rise-in"
             style={{ padding: '48px 40px', border: '1px solid var(--rule)', borderRadius: 6, background: 'var(--paper)' }}
           >
             <div className="flex flex-col gap-3">
@@ -110,51 +110,13 @@ export function PreviewStack({ registerRefs }: Props) {
               >
                 还没有内容。
                 <br />
-                从一个模板开始？
+                在左栏写一段 Markdown。
               </h2>
               <p style={{ fontSize: 14, color: 'var(--muted)', lineHeight: 1.7 }}>
-                在左栏直接写 Markdown，也可以从下面挑一份骨架改。
-                用 <code style={{ fontFamily: 'var(--font-mono)' }}>#</code> 做封面，
-                用 <code style={{ fontFamily: 'var(--font-mono)' }}>---</code> 分页。
+                用 <code style={{ fontFamily: 'var(--font-mono)' }}>#</code> 做封面标题，
+                用 <code style={{ fontFamily: 'var(--font-mono)' }}>---</code> 分页，
+                封面风格与正文主题可以在左栏独立搭配。
               </p>
-            </div>
-            <div
-              className="grid gap-2"
-              style={{ gridTemplateColumns: 'repeat(2, minmax(0, 1fr))' }}
-            >
-              {TEMPLATES.map((tpl) => (
-                <button
-                  key={tpl.id}
-                  onClick={() => {
-                    setMd(tpl.md);
-                    setThemeId(tpl.recommendTheme);
-                  }}
-                  className="text-left px-4 py-3 rounded-[3px] transition-colors"
-                  style={{ border: '1px solid var(--rule)', background: 'var(--paper)' }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = 'var(--tan-soft)';
-                    e.currentTarget.style.borderColor = 'var(--terra)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = 'var(--paper)';
-                    e.currentTarget.style.borderColor = 'var(--rule)';
-                  }}
-                >
-                  <div
-                    style={{
-                      fontFamily: 'var(--font-display)',
-                      fontSize: 16,
-                      color: 'var(--ink)',
-                      letterSpacing: '-0.01em',
-                    }}
-                  >
-                    {tpl.name}
-                  </div>
-                  <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 2 }}>
-                    {tpl.tagline}
-                  </div>
-                </button>
-              ))}
             </div>
           </div>
         </div>
@@ -191,6 +153,7 @@ export function PreviewStack({ registerRefs }: Props) {
                   total={pages.length}
                   scale={effectiveScale}
                   footer={footer}
+                  coverArt={coverArt}
                 />
               </div>
             </article>

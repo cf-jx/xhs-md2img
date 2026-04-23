@@ -13,12 +13,14 @@ export type FooterConfig = {
 type EditorState = {
   md: string;
   themeId: string;
+  coverArtId: string;
   sizeId: SizeId;
   footer: FooterConfig;
   previewScale: number;
 
   setMd: (md: string) => void;
   setThemeId: (id: string) => void;
+  setCoverArtId: (id: string) => void;
   setSizeId: (id: SizeId) => void;
   setFooter: (patch: Partial<FooterConfig>) => void;
   setPreviewScale: (s: number) => void;
@@ -69,6 +71,7 @@ const DEFAULT_MD = `# 烧了3000块我卸载了龙虾
 export const useEditorStore = create<EditorState>((set) => ({
   md: DEFAULT_MD,
   themeId: 'claude',
+  coverArtId: 'monet-lily',
   sizeId: 'xhs-3-4',
   footer: {
     enabled: true,
@@ -80,6 +83,7 @@ export const useEditorStore = create<EditorState>((set) => ({
 
   setMd: (md) => set({ md }),
   setThemeId: (themeId) => set({ themeId }),
+  setCoverArtId: (coverArtId) => set({ coverArtId }),
   setSizeId: (sizeId) => set({ sizeId }),
   setFooter: (patch) => set((s) => ({ footer: { ...s.footer, ...patch } })),
   setPreviewScale: (previewScale) => set({ previewScale }),

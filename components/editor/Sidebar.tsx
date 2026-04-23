@@ -1,15 +1,15 @@
 'use client';
 
 import { useEditorStore } from '@/lib/store/useEditorStore';
-import { THEMES } from '@/lib/themes/registry';
+import { THEMES, getTheme } from '@/lib/themes/registry';
 import { SIZE_PRESETS, type SizeId } from '@/lib/themes/types';
-import { TEMPLATES } from '@/lib/templates';
+import { COVER_ARTS } from '@/lib/covers/registry';
 
 export function Sidebar() {
-  const md = useEditorStore((s) => s.md);
-  const setMd = useEditorStore((s) => s.setMd);
   const themeId = useEditorStore((s) => s.themeId);
   const setThemeId = useEditorStore((s) => s.setThemeId);
+  const coverArtId = useEditorStore((s) => s.coverArtId);
+  const setCoverArtId = useEditorStore((s) => s.setCoverArtId);
   const sizeId = useEditorStore((s) => s.sizeId);
   const setSizeId = useEditorStore((s) => s.setSizeId);
   const previewScale = useEditorStore((s) => s.previewScale);
@@ -17,14 +17,7 @@ export function Sidebar() {
   const footer = useEditorStore((s) => s.footer);
   const setFooter = useEditorStore((s) => s.setFooter);
 
-  const applyTemplate = (tplId: string) => {
-    const tpl = TEMPLATES.find((t) => t.id === tplId);
-    if (!tpl) return;
-    const dirty = md.trim().length > 0 && md.trim() !== tpl.md.trim();
-    if (dirty && !confirm('当前编辑内容会被模板替换，继续吗？')) return;
-    setMd(tpl.md);
-    setThemeId(tpl.recommendTheme);
-  };
+  const theme = getTheme(themeId);
 
   return (
     <aside
@@ -34,40 +27,33 @@ export function Sidebar() {
         borderRight: '1px solid var(--rule)',
       }}
     >
-      <Section number="I" title="Templates" caption="一键载入">
-        <ul className="flex flex-col gap-px">
-          {TEMPLATES.map((tpl) => (
-            <li key={tpl.id}>
-              <button
-                onClick={() => applyTemplate(tpl.id)}
-                className="group w-full flex items-baseline gap-3 pl-2.5 pr-3 py-[7px] transition-colors text-left rounded-[3px]"
-                style={{ color: 'var(--ink-2)' }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'var(--tan-soft)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'transparent';
-                }}
+      <Section number="I" title="Cover" caption="封面风格">
+        <div className="grid grid-cols-2 gap-1.5">
+          <CoverTile
+            active={coverArtId === 'match-theme'}
+            onClick={() => setCoverArtId('match-theme')}
+            label="跟随主题"
+            bg={theme.tokens.coverBg ?? theme.tokens.bg}
+          />
+          {COVER_ARTS.map((ca) => {
+            const Dec = ca.Decoration;
+            return (
+              <CoverTile
+                key={ca.id}
+                active={coverArtId === ca.id}
+                onClick={() => setCoverArtId(ca.id)}
+                label={ca.name}
+                bg={ca.bg}
+                title={ca.tagline}
               >
-                <span
-                  className="text-[13px] font-medium tracking-tight"
-                  style={{ fontFamily: 'var(--font-sans)', color: 'var(--ink)' }}
-                >
-                  {tpl.name}
-                </span>
-                <span
-                  className="text-[11px] truncate"
-                  style={{ color: 'var(--muted)', fontFamily: 'var(--font-sans)' }}
-                >
-                  {tpl.tagline}
-                </span>
-              </button>
-            </li>
-          ))}
-        </ul>
+                <Dec />
+              </CoverTile>
+            );
+          })}
+        </div>
       </Section>
 
-      <Section number="II" title="Theme" caption="十二套主题">
+      <Section number="II" title="Theme" caption="正文样式">
         <ul className="flex flex-col gap-px">
           {THEMES.map((t) => {
             const active = t.id === themeId;
@@ -97,7 +83,7 @@ export function Sidebar() {
                       boxShadow: 'inset 0 0 0 1px rgba(0,0,0,0.12)',
                     }}
                   >
-                    <span style={{ background: t.tokens.coverBg ?? t.tokens.bg, flex: 1 }} />
+                    <span style={{ background: t.tokens.bg, flex: 1 }} />
                     <span style={{ background: t.tokens.accent, flex: 1 }} />
                   </span>
                   <span
@@ -227,6 +213,57 @@ export function Sidebar() {
         </p>
       </footer>
     </aside>
+  );
+}
+
+function CoverTile({
+  active,
+  onClick,
+  label,
+  bg,
+  title,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  label: string;
+  bg: string;
+  title?: string;
+  children?: React.ReactNode;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      title={title ?? label}
+      className="flex flex-col gap-1 rounded-[3px] transition-all text-left p-1"
+      style={{
+        border: active ? '1.5px solid var(--ink)' : '1px solid var(--rule)',
+        background: 'var(--paper)',
+      }}
+      onMouseEnter={(e) => {
+        if (!active) e.currentTarget.style.borderColor = 'var(--terra)';
+      }}
+      onMouseLeave={(e) => {
+        if (!active) e.currentTarget.style.borderColor = 'var(--rule)';
+      }}
+    >
+      <div
+        className="relative overflow-hidden w-full"
+        style={{
+          aspectRatio: '3 / 4',
+          background: bg,
+          borderRadius: 2,
+        }}
+      >
+        {children}
+      </div>
+      <span
+        className="text-[11px] truncate pl-0.5"
+        style={{ color: active ? 'var(--ink)' : 'var(--ink-2)', fontFamily: 'var(--font-sans)' }}
+      >
+        {label}
+      </span>
+    </button>
   );
 }
 

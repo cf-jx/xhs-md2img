@@ -2,6 +2,7 @@
 
 import { CSSProperties, forwardRef, ReactNode } from 'react';
 import type { SizePreset, Theme } from '@/lib/themes/types';
+import type { CoverArt } from '@/lib/covers/types';
 
 type Props = {
   theme: Theme;
@@ -9,16 +10,31 @@ type Props = {
   scale?: number;
   children: ReactNode;
   variant?: 'cover' | 'body';
+  coverArt?: CoverArt | null;
 };
 
 export const CardFrame = forwardRef<HTMLDivElement, Props>(function CardFrame(
-  { theme, size, scale = 1, children, variant = 'body' },
+  { theme, size, scale = 1, children, variant = 'body', coverArt = null },
   ref,
 ) {
   const t = theme.tokens;
   const isCover = variant === 'cover';
-  const bg = isCover ? t.coverBg ?? t.bg : t.bg;
-  const ink = isCover ? t.coverInk ?? t.ink : t.ink;
+  const useCoverArt = isCover && coverArt != null;
+
+  const bg = useCoverArt
+    ? coverArt!.bg
+    : isCover
+    ? t.coverBg ?? t.bg
+    : t.bg;
+  const ink = useCoverArt
+    ? coverArt!.ink
+    : isCover
+    ? t.coverInk ?? t.ink
+    : t.ink;
+
+  const quoteBg = useCoverArt ? coverArt!.quoteBg : t.quoteBg ?? t.accentSoft;
+  const quoteInk = useCoverArt ? coverArt!.quoteInk : t.quoteInk ?? t.ink;
+  const quoteBorder = t.quoteBorder ?? t.accent;
 
   const cssVars: CSSProperties & Record<string, string | number> = {
     '--c-bg': t.bg,
@@ -30,9 +46,9 @@ export const CardFrame = forwardRef<HTMLDivElement, Props>(function CardFrame(
     '--c-divider': t.divider,
     '--c-code-bg': t.codeBg,
     '--c-code-ink': t.codeInk,
-    '--c-quote-bg': t.quoteBg ?? t.accentSoft,
-    '--c-quote-border': t.quoteBorder ?? t.accent,
-    '--c-quote-ink': t.quoteInk ?? t.ink,
+    '--c-quote-bg': quoteBg,
+    '--c-quote-border': quoteBorder,
+    '--c-quote-ink': quoteInk,
     '--font-title': theme.typography.titleFamily,
     '--font-body': theme.typography.bodyFamily,
     '--fs-h1': `${theme.typography.h1Size}px`,
@@ -71,9 +87,8 @@ export const CardFrame = forwardRef<HTMLDivElement, Props>(function CardFrame(
           style={cssVars}
           className="relative overflow-hidden"
         >
-          {isCover && (
-            <CoverDeco cover={theme.cover} />
-          )}
+          {useCoverArt && <CoverArtDecoration art={coverArt!} />}
+          {isCover && !useCoverArt && <CoverDeco cover={theme.cover} />}
           <div className="relative z-10 w-full h-full flex flex-col">
             {children}
           </div>
@@ -82,6 +97,11 @@ export const CardFrame = forwardRef<HTMLDivElement, Props>(function CardFrame(
     </div>
   );
 });
+
+function CoverArtDecoration({ art }: { art: CoverArt }) {
+  const Dec = art.Decoration;
+  return <Dec />;
+}
 
 function CoverDeco({ cover }: { cover: Theme['cover'] }) {
   switch (cover) {

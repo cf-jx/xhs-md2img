@@ -7,6 +7,7 @@ import remarkBreaks from 'remark-breaks';
 import type { SizePreset, Theme } from '@/lib/themes/types';
 import type { Page } from '@/lib/markdown/paginate';
 import type { FooterConfig } from '@/lib/store/useEditorStore';
+import type { CoverArt } from '@/lib/covers/types';
 import { CardFrame } from './CardFrame';
 import { FooterBadge } from './FooterBadge';
 
@@ -17,15 +18,18 @@ type Props = {
   total: number;
   scale?: number;
   footer: FooterConfig;
+  coverArt?: CoverArt | null;
 };
 
 export const MarkdownCard = forwardRef<HTMLDivElement, Props>(function MarkdownCard(
-  { theme, size, page, total, scale = 1, footer },
+  { theme, size, page, total, scale = 1, footer, coverArt = null },
   ref,
 ) {
+  const activeCoverArt = page.isCover ? coverArt : null;
+
   const components = useMemo<Components>(
-    () => buildComponents(theme, page.isCover),
-    [theme, page.isCover],
+    () => buildComponents(theme, page.isCover, activeCoverArt),
+    [theme, page.isCover, activeCoverArt],
   );
 
   const padding = page.isCover
@@ -39,6 +43,7 @@ export const MarkdownCard = forwardRef<HTMLDivElement, Props>(function MarkdownC
       size={size}
       scale={scale}
       variant={page.isCover ? 'cover' : 'body'}
+      coverArt={activeCoverArt}
     >
       <div
         className="flex-1 min-h-0 flex flex-col"
@@ -65,9 +70,9 @@ export const MarkdownCard = forwardRef<HTMLDivElement, Props>(function MarkdownC
   );
 });
 
-function buildComponents(theme: Theme, isCover: boolean): Components {
+function buildComponents(theme: Theme, isCover: boolean, coverArt: CoverArt | null): Components {
   const ink = isCover
-    ? theme.tokens.coverInk ?? theme.tokens.ink
+    ? coverArt?.ink ?? theme.tokens.coverInk ?? theme.tokens.ink
     : theme.tokens.ink;
   const titleFontWeight = theme.typography.titleWeight;
 
