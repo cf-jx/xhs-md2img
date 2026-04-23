@@ -1,0 +1,302 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== Editorial tokens — "Markdown, set in type." ===== */
+:root {
+  color-scheme: light;
+
+  /* Paper & ink — neutrals tinted toward warm hue 70 */
+  --paper: oklch(0.965 0.012 70);          /* main bg */
+  --paper-deep: oklch(0.945 0.014 70);     /* preview stage */
+  --surface: oklch(0.985 0.008 70);        /* editor surface */
+  --ink: oklch(0.22 0.018 40);             /* primary text */
+  --ink-2: oklch(0.36 0.022 40);           /* secondary text */
+  --ink-3: oklch(0.55 0.018 50);           /* tertiary */
+  --muted: oklch(0.62 0.018 60);           /* labels */
+  --rule: oklch(0.88 0.012 65);            /* hairlines */
+  --rule-strong: oklch(0.82 0.014 60);     /* input borders */
+
+  /* The one accent */
+  --terra: oklch(0.58 0.14 30);
+  --terra-ink: oklch(0.48 0.14 30);
+  --terra-soft: oklch(0.93 0.04 45);
+
+  /* Secondary ornament (never load-bearing) */
+  --tan: oklch(0.75 0.07 55);
+  --tan-soft: oklch(0.94 0.028 65);
+  --sage: oklch(0.62 0.04 140);
+
+  /* Type scale (editorial, not dashboard) */
+  --fs-xxs: 10.5px;
+  --fs-xs: 11.5px;
+  --fs-sm: 13px;
+  --fs-md: 15px;
+  --fs-lg: 20px;
+  --fs-xl: 28px;
+  --fs-display: 56px;
+
+  /* Families */
+  --font-display: 'Gloock', 'Noto Serif SC', 'Source Han Serif SC', Georgia, serif;
+  --font-serif: 'Noto Serif SC', 'Source Han Serif SC', Georgia, serif;
+  --font-sans: 'Public Sans', 'Noto Sans SC', 'PingFang SC', -apple-system, 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Back-compat for earlier UI vars still referenced in card renderer */
+  --ui-bg: var(--paper);
+  --ui-surface: var(--surface);
+  --ui-surface-2: var(--paper-deep);
+  --ui-ink: var(--ink);
+  --ui-ink-2: var(--ink-2);
+  --ui-muted: var(--muted);
+  --ui-divider: var(--rule);
+  --ui-divider-2: var(--rule-strong);
+  --ui-accent: var(--terra);
+  --ui-accent-dark: var(--terra-ink);
+  --ui-tan: var(--tan);
+  --ui-tan-soft: var(--tan-soft);
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-feature-settings: 'ss01', 'cv11', 'kern';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* { box-sizing: border-box; }
+[data-card-frame] * { box-sizing: border-box; }
+[data-card-frame] ul li::marker,
+[data-card-frame] ol li::marker { color: transparent; }
+
+/* ===== Editorial primitives ===== */
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: var(--fs-xxs);
+  font-weight: 600;
+  letter-spacing: 2.4px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.byline {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-style: italic;
+  font-size: 13.5px;
+  color: var(--ink-3);
+  letter-spacing: 0.1px;
+}
+
+.numeral {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-feature-settings: 'lnum', 'tnum';
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.hairline {
+  background: var(--rule);
+  height: 1px;
+  width: 100%;
+  border: 0;
+}
+
+.hairline-double {
+  height: 4px;
+  background:
+    linear-gradient(var(--rule), var(--rule)) top/100% 1px no-repeat,
+    linear-gradient(var(--rule), var(--rule)) bottom/100% 1px no-repeat;
+}
+
+.ui-input {
+  background: var(--surface);
+  border: 1px solid var(--rule-strong);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--fs-sm);
+  padding: 7px 11px;
+  border-radius: 4px;
+  transition: border-color .15s, box-shadow .15s;
+  outline: none;
+  width: 100%;
+}
+.ui-input:focus {
+  border-color: var(--terra);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--terra) 15%, transparent);
+}
+.ui-input::placeholder { color: var(--ink-3); opacity: 0.6; }
+
+.ui-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 4px;
+  font-family: var(--font-sans);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  letter-spacing: 0.1px;
+  cursor: pointer;
+  transition: background .15s, border-color .15s, color .15s, transform .1s;
+  border: 1px solid var(--rule-strong);
+  background: var(--surface);
+  color: var(--ink);
+}
+.ui-btn:hover:not(:disabled) {
+  background: var(--tan-soft);
+  border-color: var(--tan);
+}
+.ui-btn:active:not(:disabled) { transform: translateY(1px); }
+.ui-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.ui-btn-primary {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.ui-btn-primary:hover:not(:disabled) {
+  background: var(--terra);
+  border-color: var(--terra);
+  color: #FFFFFF;
+}
+
+.ui-btn-ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--ink-2);
+}
+.ui-btn-ghost:hover:not(:disabled) {
+  background: var(--tan-soft);
+  color: var(--ink);
+}
+
+.ui-checkbox {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 3px;
+  background: var(--surface);
+  cursor: pointer;
+  position: relative;
+  transition: all .15s;
+  flex-shrink: 0;
+}
+.ui-checkbox:hover { border-color: var(--tan); }
+.ui-checkbox:checked {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+.ui-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  left: 3.5px;
+  top: 0.5px;
+  width: 4px;
+  height: 8px;
+  border: solid var(--paper);
+  border-width: 0 1.8px 1.8px 0;
+  transform: rotate(45deg);
+}
+
+.ui-range {
+  appearance: none;
+  height: 2px;
+  background: var(--rule-strong);
+  border-radius: 999px;
+  outline: none;
+  cursor: pointer;
+}
+.ui-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--terra);
+  border: 2px solid var(--paper);
+  box-shadow: 0 1px 2px rgba(31,25,21,0.25);
+  cursor: pointer;
+}
+.ui-range::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--terra);
+  border: 2px solid var(--paper);
+  cursor: pointer;
+}
+
+/* ===== CodeMirror overrides ===== */
+.cm-editor {
+  height: 100%;
+  font-size: 13.5px;
+  background: transparent !important;
+}
+.cm-scroller {
+  font-family: var(--font-mono) !important;
+  line-height: 1.75 !important;
+  padding: 10px 0;
+}
+.cm-gutters {
+  background: transparent !important;
+  border-right: 1px solid var(--rule) !important;
+  color: var(--muted) !important;
+  padding-right: 4px;
+}
+.cm-gutterElement {
+  font-family: var(--font-mono) !important;
+  font-size: 11px !important;
+  font-feature-settings: 'tnum';
+}
+.cm-activeLine { background: color-mix(in oklch, var(--tan) 8%, transparent) !important; }
+.cm-activeLineGutter { background: transparent !important; color: var(--terra) !important; }
+.cm-content { caret-color: var(--terra); }
+.cm-cursor { border-left-color: var(--terra) !important; }
+.cm-selectionBackground { background: color-mix(in oklch, var(--tan) 22%, transparent) !important; }
+.cm-focused .cm-selectionBackground { background: color-mix(in oklch, var(--tan) 32%, transparent) !important; }
+
+/* ===== Preview page stage ===== */
+.page-mark {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 46px;
+  line-height: 1;
+  color: var(--ink-3);
+  letter-spacing: -0.02em;
+  font-feature-settings: 'lnum';
+}
+
+.page-mark-sub {
+  font-family: var(--font-sans);
+  font-size: var(--fs-xxs);
+  letter-spacing: 2.4px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.paper-shadow {
+  box-shadow:
+    0 0 0 1px color-mix(in oklch, var(--ink) 5%, transparent),
+    0 1px 2px rgba(31,25,21,0.04),
+    0 10px 32px -10px rgba(31,25,21,0.18);
+}
+
+/* ===== Entrance animation ===== */
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.rise-in { animation: riseIn 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .rise-in { animation: none; }
+  * { transition-duration: 0ms !important; }
+}

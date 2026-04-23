@@ -1,0 +1,36 @@
+import type { Theme } from '../types';
+
+export const magazineMono: Theme = {
+  id: 'magazine-mono',
+  name: '杂志黑白',
+  tagline: '大衬线标题 · 强黑白对比',
+  cover: 'mono-bold',
+  previewBadge: '#000000',
+  tokens: {
+    bg: '#FAFAFA',
+    surface: '#FFFFFF',
+    ink: '#0A0A0A',
+    muted: '#6B6B6B',
+    accent: '#000000',
+    accentSoft: '#EDEDED',
+    divider: '#000000',
+    codeBg: '#F0F0F0',
+    codeInk: '#0A0A0A',
+    coverBg: '#0A0A0A',
+    coverInk: '#FAFAFA',
+    quoteBg: '#FAFAFA',
+    quoteBorder: '#000000',
+  },
+  typography: {
+    titleFamily: '"Noto Serif SC","Source Han Serif SC",serif',
+    bodyFamily: '"Noto Sans SC",system-ui,sans-serif',
+    titleWeight: 900,
+    bodyWeight: 400,
+    h1Size: 96,
+    h2Size: 56,
+    h3Size: 36,
+    bodySize: 28,
+    lineHeight: 1.55,
+    letterSpacing: '-2px',
+  },
+};

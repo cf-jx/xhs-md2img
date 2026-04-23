@@ -1,0 +1,36 @@
+import type { Theme } from '../types';
+
+export const retroPaper: Theme = {
+  id: 'retro-paper',
+  name: '复古牛皮纸',
+  tagline: '复古学习风 · 手写衬线',
+  cover: 'paper',
+  previewBadge: '#8B5A2B',
+  tokens: {
+    bg: '#E8DCC0',
+    surface: '#F2E8CF',
+    ink: '#3D2E1C',
+    muted: '#7A6748',
+    accent: '#B8441F',
+    accentSoft: '#E8C49D',
+    divider: '#C9B88A',
+    codeBg: '#D9C89E',
+    codeInk: '#3D2E1C',
+    coverBg: '#3D2E1C',
+    coverInk: '#E8DCC0',
+    quoteBg: '#D9C89E',
+    quoteBorder: '#B8441F',
+  },
+  typography: {
+    titleFamily: '"Ma Shan Zheng","LXGW WenKai","Noto Serif SC",serif',
+    bodyFamily: '"LXGW WenKai","Noto Serif SC",serif',
+    titleWeight: 700,
+    bodyWeight: 400,
+    h1Size: 76,
+    h2Size: 48,
+    h3Size: 32,
+    bodySize: 28,
+    lineHeight: 1.85,
+    letterSpacing: '1px',
+  },
+};

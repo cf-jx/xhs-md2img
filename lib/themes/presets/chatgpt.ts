@@ -1,0 +1,36 @@
+import type { Theme } from '../types';
+
+export const chatgpt: Theme = {
+  id: 'chatgpt',
+  name: 'ChatGPT 墨绿',
+  tagline: '深灰底 + OpenAI 品牌绿',
+  cover: 'terminal',
+  previewBadge: '#10A37F',
+  tokens: {
+    bg: '#202123',
+    surface: '#2A2B2E',
+    ink: '#ECECEC',
+    muted: '#9CA3AF',
+    accent: '#10A37F',
+    accentSoft: '#0F3F33',
+    divider: '#3E3F44',
+    codeBg: '#161718',
+    codeInk: '#A8E1CF',
+    coverBg: '#141414',
+    coverInk: '#FFFFFF',
+    quoteBg: '#2A2B2E',
+    quoteBorder: '#10A37F',
+  },
+  typography: {
+    titleFamily: '"Noto Sans SC","PingFang SC",system-ui,sans-serif',
+    bodyFamily: '"Noto Sans SC","PingFang SC",system-ui,sans-serif',
+    titleWeight: 800,
+    bodyWeight: 400,
+    h1Size: 72,
+    h2Size: 48,
+    h3Size: 32,
+    bodySize: 28,
+    lineHeight: 1.7,
+    letterSpacing: '-0.5px',
+  },
+};

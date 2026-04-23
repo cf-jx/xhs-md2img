@@ -1,0 +1,36 @@
+import type { Theme } from '../types';
+
+export const zhihuBlue: Theme = {
+  id: 'zhihu-blue',
+  name: '知乎蓝',
+  tagline: '白底 + 知乎品牌蓝',
+  cover: 'zhihu-card',
+  previewBadge: '#056DE8',
+  tokens: {
+    bg: '#F6F6F6',
+    surface: '#FFFFFF',
+    ink: '#1A1A1A',
+    muted: '#8590A6',
+    accent: '#056DE8',
+    accentSoft: '#E1EDFE',
+    divider: '#EBEBEB',
+    codeBg: '#F6F6F6',
+    codeInk: '#056DE8',
+    coverBg: '#056DE8',
+    coverInk: '#FFFFFF',
+    quoteBg: '#F6F6F6',
+    quoteBorder: '#056DE8',
+  },
+  typography: {
+    titleFamily: '"Noto Sans SC","PingFang SC",system-ui,sans-serif',
+    bodyFamily: '"Noto Sans SC","PingFang SC",system-ui,sans-serif',
+    titleWeight: 700,
+    bodyWeight: 400,
+    h1Size: 68,
+    h2Size: 44,
+    h3Size: 30,
+    bodySize: 28,
+    lineHeight: 1.75,
+    letterSpacing: '-0.5px',
+  },
+};

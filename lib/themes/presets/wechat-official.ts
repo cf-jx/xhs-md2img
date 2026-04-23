@@ -1,0 +1,36 @@
+import type { Theme } from '../types';
+
+export const wechatOfficial: Theme = {
+  id: 'wechat-official',
+  name: '公众号极简',
+  tagline: '白底 + 灰文 + 细分隔',
+  cover: 'wechat-line',
+  previewBadge: '#07C160',
+  tokens: {
+    bg: '#FFFFFF',
+    surface: '#FFFFFF',
+    ink: '#333333',
+    muted: '#999999',
+    accent: '#07C160',
+    accentSoft: '#E8F7EE',
+    divider: '#E5E5E5',
+    codeBg: '#F5F5F5',
+    codeInk: '#C7254E',
+    coverBg: '#FFFFFF',
+    coverInk: '#333333',
+    quoteBg: '#F7F7F7',
+    quoteBorder: '#CCCCCC',
+  },
+  typography: {
+    titleFamily: '"Noto Serif SC","Source Han Serif SC",serif',
+    bodyFamily: '"Noto Sans SC","PingFang SC",system-ui,sans-serif',
+    titleWeight: 700,
+    bodyWeight: 400,
+    h1Size: 60,
+    h2Size: 40,
+    h3Size: 28,
+    bodySize: 26,
+    lineHeight: 1.85,
+    letterSpacing: '1px',
+  },
+};

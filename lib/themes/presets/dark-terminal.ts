@@ -1,0 +1,36 @@
+import type { Theme } from '../types';
+
+export const darkTerminal: Theme = {
+  id: 'dark-terminal',
+  name: '终端深色',
+  tagline: '黑底霓虹绿 · 等宽字体',
+  cover: 'terminal',
+  previewBadge: '#00FF9C',
+  tokens: {
+    bg: '#0A0E14',
+    surface: '#10151C',
+    ink: '#D7E0EA',
+    muted: '#5C6773',
+    accent: '#00FF9C',
+    accentSoft: '#0F3F2A',
+    divider: '#1E2530',
+    codeBg: '#000000',
+    codeInk: '#00FF9C',
+    coverBg: '#0A0E14',
+    coverInk: '#00FF9C',
+    quoteBg: '#10151C',
+    quoteBorder: '#00FF9C',
+  },
+  typography: {
+    titleFamily: '"JetBrains Mono","Fira Code",ui-monospace,monospace',
+    bodyFamily: '"JetBrains Mono","Noto Sans SC",ui-monospace,monospace',
+    titleWeight: 700,
+    bodyWeight: 400,
+    h1Size: 64,
+    h2Size: 44,
+    h3Size: 30,
+    bodySize: 26,
+    lineHeight: 1.7,
+    letterSpacing: '0',
+  },
+};

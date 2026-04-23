@@ -1,0 +1,36 @@
+import type { Theme } from '../types';
+
+export const claude: Theme = {
+  id: 'claude',
+  name: 'Claude 暖棕',
+  tagline: 'Tan · Terra · Charcoal 三色暖调',
+  cover: 'dark-radial',
+  previewBadge: '#D4A27F',
+  tokens: {
+    bg: '#FAF6F1',
+    surface: '#FDFCFA',
+    ink: '#1F1915',
+    muted: '#8C7462',
+    accent: '#C75B39',
+    accentSoft: '#F5E6D3',
+    divider: '#E5DDD5',
+    codeBg: '#F5E6D3',
+    codeInk: '#3D2E23',
+    coverBg: '#1F1915',
+    coverInk: '#FAF6F1',
+    quoteBg: '#F5E6D3',
+    quoteBorder: '#D4A27F',
+  },
+  typography: {
+    titleFamily: '"Noto Serif SC","Source Han Serif SC",serif',
+    bodyFamily: '"Noto Sans SC","PingFang SC",system-ui,sans-serif',
+    titleWeight: 900,
+    bodyWeight: 400,
+    h1Size: 80,
+    h2Size: 52,
+    h3Size: 36,
+    bodySize: 30,
+    lineHeight: 1.7,
+    letterSpacing: '-1px',
+  },
+};

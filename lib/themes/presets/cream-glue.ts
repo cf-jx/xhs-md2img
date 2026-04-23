@@ -1,0 +1,36 @@
+import type { Theme } from '../types';
+
+export const creamGlue: Theme = {
+  id: 'cream-glue',
+  name: '奶油胶',
+  tagline: '马卡龙粉 + 牛仔蓝双色块',
+  cover: 'cream-glue',
+  previewBadge: '#FFA3BA',
+  tokens: {
+    bg: '#FFD6E0',
+    surface: '#FFFFFF',
+    ink: '#2B3A67',
+    muted: '#8696B8',
+    accent: '#FF6B9D',
+    accentSoft: '#B8D0FF',
+    divider: '#FFFFFF',
+    codeBg: '#FFFFFF',
+    codeInk: '#FF6B9D',
+    coverBg: '#B8D0FF',
+    coverInk: '#2B3A67',
+    quoteBg: '#FFFFFF',
+    quoteBorder: '#FF6B9D',
+  },
+  typography: {
+    titleFamily: '"LXGW WenKai","Noto Sans SC",sans-serif',
+    bodyFamily: '"Noto Sans SC","PingFang SC",system-ui,sans-serif',
+    titleWeight: 800,
+    bodyWeight: 500,
+    h1Size: 72,
+    h2Size: 44,
+    h3Size: 30,
+    bodySize: 28,
+    lineHeight: 1.75,
+    letterSpacing: '-0.5px',
+  },
+};

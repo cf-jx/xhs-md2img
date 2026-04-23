@@ -1,0 +1,36 @@
+import type { Theme } from '../types';
+
+export const notionMinimal: Theme = {
+  id: 'notion-minimal',
+  name: 'Notion 极简白',
+  tagline: '纯白底 + 黑字 + 细灰线',
+  cover: 'cream-minimal',
+  previewBadge: '#37352F',
+  tokens: {
+    bg: '#FFFFFF',
+    surface: '#FFFFFF',
+    ink: '#37352F',
+    muted: '#9B9A97',
+    accent: '#2383E2',
+    accentSoft: '#E7F3FE',
+    divider: '#EBEBEA',
+    codeBg: '#F7F6F3',
+    codeInk: '#EB5757',
+    coverBg: '#FFFFFF',
+    coverInk: '#37352F',
+    quoteBg: '#F7F6F3',
+    quoteBorder: '#37352F',
+  },
+  typography: {
+    titleFamily: '"Inter","Noto Sans SC",system-ui,sans-serif',
+    bodyFamily: '"Inter","Noto Sans SC",system-ui,sans-serif',
+    titleWeight: 700,
+    bodyWeight: 400,
+    h1Size: 64,
+    h2Size: 40,
+    h3Size: 28,
+    bodySize: 26,
+    lineHeight: 1.7,
+    letterSpacing: '-0.5px',
+  },
+};

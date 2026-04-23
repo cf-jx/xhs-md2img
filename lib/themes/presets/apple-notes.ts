@@ -1,0 +1,36 @@
+import type { Theme } from '../types';
+
+export const appleNotes: Theme = {
+  id: 'apple-notes',
+  name: '苹果备忘录',
+  tagline: '米黄笺纸 · 横线手账感',
+  cover: 'apple-note',
+  previewBadge: '#FFCC00',
+  tokens: {
+    bg: '#FFF9E6',
+    surface: '#FFFBEE',
+    ink: '#3C3C43',
+    muted: '#8E8E93',
+    accent: '#FF9500',
+    accentSoft: '#FFE4B0',
+    divider: '#E8DEB7',
+    codeBg: '#FFF4C8',
+    codeInk: '#A8530A',
+    coverBg: '#FFF4B8',
+    coverInk: '#3C3C43',
+    quoteBg: '#FFF4C8',
+    quoteBorder: '#FF9500',
+  },
+  typography: {
+    titleFamily: '"LXGW WenKai","Ma Shan Zheng","Noto Serif SC",serif',
+    bodyFamily: '"LXGW WenKai","Noto Serif SC",serif',
+    titleWeight: 700,
+    bodyWeight: 400,
+    h1Size: 68,
+    h2Size: 44,
+    h3Size: 30,
+    bodySize: 28,
+    lineHeight: 1.8,
+    letterSpacing: '0',
+  },
+};

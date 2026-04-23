@@ -1,0 +1,36 @@
+import type { Theme } from '../types';
+
+export const xhsOfficial: Theme = {
+  id: 'xhs-official',
+  name: '小红书官方红',
+  tagline: '奶油底 + 小红书品牌红',
+  cover: 'xhs-pop',
+  previewBadge: '#FF2442',
+  tokens: {
+    bg: '#FFF5F0',
+    surface: '#FFFFFF',
+    ink: '#2B2B2B',
+    muted: '#8C8C8C',
+    accent: '#FF2442',
+    accentSoft: '#FFD9DF',
+    divider: '#F2E4DC',
+    codeBg: '#FFF0EB',
+    codeInk: '#C73050',
+    coverBg: '#FF2442',
+    coverInk: '#FFFFFF',
+    quoteBg: '#FFF0EB',
+    quoteBorder: '#FF2442',
+  },
+  typography: {
+    titleFamily: '"Noto Sans SC","PingFang SC",system-ui,sans-serif',
+    bodyFamily: '"Noto Sans SC","PingFang SC",system-ui,sans-serif',
+    titleWeight: 900,
+    bodyWeight: 400,
+    h1Size: 72,
+    h2Size: 48,
+    h3Size: 34,
+    bodySize: 30,
+    lineHeight: 1.75,
+    letterSpacing: '-0.5px',
+  },
+};

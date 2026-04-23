@@ -1,0 +1,36 @@
+import type { Theme } from '../types';
+
+export const instagramGradient: Theme = {
+  id: 'instagram-gradient',
+  name: 'IG 渐变',
+  tagline: '紫粉橙渐变 · 青春感',
+  cover: 'gradient',
+  previewBadge: '#FD1D1D',
+  tokens: {
+    bg: '#1A0B2E',
+    surface: '#25133F',
+    ink: '#FFFFFF',
+    muted: '#C8B0E6',
+    accent: '#FCB045',
+    accentSoft: '#5A3A8A',
+    divider: '#3E2660',
+    codeBg: '#12081F',
+    codeInk: '#FCB045',
+    coverBg: 'linear-gradient(135deg,#833AB4 0%,#FD1D1D 50%,#FCB045 100%)',
+    coverInk: '#FFFFFF',
+    quoteBg: '#25133F',
+    quoteBorder: '#FD1D1D',
+  },
+  typography: {
+    titleFamily: '"Noto Sans SC","PingFang SC",system-ui,sans-serif',
+    bodyFamily: '"Noto Sans SC","PingFang SC",system-ui,sans-serif',
+    titleWeight: 900,
+    bodyWeight: 400,
+    h1Size: 76,
+    h2Size: 48,
+    h3Size: 32,
+    bodySize: 28,
+    lineHeight: 1.7,
+    letterSpacing: '-1px',
+  },
+};
