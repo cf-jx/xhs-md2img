@@ -9,8 +9,9 @@ export type Page = {
 
 const EXPLICIT_BREAK = /\n\s*(?:---+|<!--\s*pagebreak\s*-->)\s*\n/g;
 
-// Body padding matches MarkdownCard.tsx (96 top + 40 bottom) plus footer strip.
-const BODY_PADDING_PX = 96 + 40 + 60;
+// Body padding matches MarkdownCard.tsx (96 top + 40 bottom) plus footer strip,
+// plus a small safety margin so text never lands right at the edge.
+const BODY_PADDING_PX = 96 + 40 + 60 + 48;
 // Cover padding is larger — but covers are never auto-split, so this value is informational.
 
 export function paginate(md: string, sizeId: SizeId = 'xhs-3-4', theme?: Theme): Page[] {
@@ -95,10 +96,10 @@ function blockHeightPx(block: string, theme: Theme | undefined, contentWidth: nu
   const lh = t?.lineHeight ?? 1.7;
   const bodyLh = bodySize * lh;
 
-  // Characters per line: CJK ~0.55 em/char, ASCII ~0.42 em/char.
-  // Mixed content: use 0.55 as conservative estimator (CJK dominant).
-  const charWidthPx = bodySize * 0.58;
-  const cpl = Math.max(12, Math.floor(contentWidth / charWidthPx));
+  // CJK chars render at ~1em; body text is usually CJK-dominant, so assume
+  // ~0.92em/char. This is conservative so headings don't land orphaned.
+  const charWidthPx = bodySize * 0.92;
+  const cpl = Math.max(10, Math.floor(contentWidth / charWidthPx));
 
   const text = stripMd(block);
   const weighted = weightChars(text);

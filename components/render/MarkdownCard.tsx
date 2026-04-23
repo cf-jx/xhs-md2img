@@ -29,7 +29,7 @@ export const MarkdownCard = forwardRef<HTMLDivElement, Props>(function MarkdownC
   );
 
   const padding = page.isCover
-    ? { padding: '120px 90px 80px' }
+    ? { padding: '140px 90px 140px' }
     : { padding: '96px 80px 40px' };
 
   return (
@@ -44,8 +44,8 @@ export const MarkdownCard = forwardRef<HTMLDivElement, Props>(function MarkdownC
         className="flex-1 min-h-0 flex flex-col"
         style={{
           ...padding,
-          justifyContent: page.isCover ? 'flex-end' : 'flex-start',
-          gap: page.isCover ? 32 : 20,
+          justifyContent: page.isCover ? 'center' : 'flex-start',
+          gap: page.isCover ? 28 : 20,
         }}
       >
         <ReactMarkdown
