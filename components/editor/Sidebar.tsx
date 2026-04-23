@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useEditorStore } from '@/lib/store/useEditorStore';
 import { THEMES, getTheme } from '@/lib/themes/registry';
 import { SIZE_PRESETS, type SizeId } from '@/lib/themes/types';
@@ -27,7 +28,7 @@ export function Sidebar() {
         borderRight: '1px solid var(--rule)',
       }}
     >
-      <Section number="I" title="Cover" caption="封面风格">
+      <Section number="I" title="Cover" caption="封面风格" collapsible defaultOpen={false}>
         <div className="grid grid-cols-2 gap-1.5">
           <CoverTile
             active={coverArtId === 'match-theme'}
@@ -53,7 +54,7 @@ export function Sidebar() {
         </div>
       </Section>
 
-      <Section number="II" title="Theme" caption="正文样式">
+      <Section number="II" title="Theme" caption="正文样式" collapsible defaultOpen={false}>
         <ul className="flex flex-col gap-px">
           {THEMES.map((t) => {
             const active = t.id === themeId;
@@ -272,34 +273,74 @@ function Section({
   title,
   caption,
   children,
+  collapsible = false,
+  defaultOpen = true,
 }: {
   number: string;
   title: string;
   caption: string;
   children: React.ReactNode;
+  collapsible?: boolean;
+  defaultOpen?: boolean;
 }) {
+  const [open, setOpen] = useState(defaultOpen);
+  const isOpen = collapsible ? open : true;
+
+  const header = (
+    <div
+      className="flex items-baseline gap-2.5 px-1"
+      style={{
+        marginBottom: isOpen ? 12 : 0,
+        cursor: collapsible ? 'pointer' : 'default',
+        userSelect: collapsible ? 'none' : 'auto',
+      }}
+      onClick={collapsible ? () => setOpen((o) => !o) : undefined}
+      role={collapsible ? 'button' : undefined}
+      aria-expanded={collapsible ? isOpen : undefined}
+    >
+      <span className="numeral" style={{ fontSize: 20, color: 'var(--terra)' }}>
+        {number}
+      </span>
+      <span
+        style={{
+          fontFamily: 'var(--font-display)',
+          fontSize: 15,
+          color: 'var(--ink)',
+          letterSpacing: '-0.01em',
+        }}
+      >
+        {title}
+      </span>
+      <span className="ml-auto flex items-baseline gap-2">
+        <span className="eyebrow">{caption}</span>
+        {collapsible && (
+          <span
+            aria-hidden
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 11,
+              color: 'var(--muted)',
+              display: 'inline-block',
+              transform: isOpen ? 'rotate(90deg)' : 'rotate(0deg)',
+              transition: 'transform 0.15s ease',
+              width: 10,
+              textAlign: 'center',
+            }}
+          >
+            ›
+          </span>
+        )}
+      </span>
+    </div>
+  );
+
   return (
-    <section className="px-4 pt-6 pb-5" style={{ borderBottom: '1px solid var(--rule)' }}>
-      <div className="flex items-baseline gap-2.5 mb-3 px-1">
-        <span
-          className="numeral"
-          style={{ fontSize: 20, color: 'var(--terra)' }}
-        >
-          {number}
-        </span>
-        <span
-          style={{
-            fontFamily: 'var(--font-display)',
-            fontSize: 15,
-            color: 'var(--ink)',
-            letterSpacing: '-0.01em',
-          }}
-        >
-          {title}
-        </span>
-        <span className="ml-auto eyebrow">{caption}</span>
-      </div>
-      {children}
+    <section
+      className={collapsible ? 'px-4 pt-5 pb-5' : 'px-4 pt-6 pb-5'}
+      style={{ borderBottom: '1px solid var(--rule)' }}
+    >
+      {header}
+      {isOpen && children}
     </section>
   );
 }
