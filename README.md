@@ -1,10 +1,13 @@
 # XHS · Type Studio
 
+[![Live on Cloudflare Pages](https://img.shields.io/badge/Live-xhs--md2img.pages.dev-C75B39?style=flat-square&logo=cloudflare&logoColor=white)](https://xhs-md2img.pages.dev/)
+[![Deploy to Cloudflare](https://github.com/cf-jx/xhs-md2img/actions/workflows/deploy.yml/badge.svg)](https://github.com/cf-jx/xhs-md2img/actions/workflows/deploy.yml)
+
 > **Markdown, set in type.** 把 Markdown 排成小红书图文的纯前端编辑工坊。
 
 一个零后端的 Next.js Web 应用：左边写 Markdown，右边实时预览多张小红书尺寸卡片，一键切换 12 套视觉主题，批量导出 PNG / ZIP。UI 本身按 editorial 方向雕刻，Claude 官方设计语言——奶油底、赤陶红、Gloock serif 报头、罗马数字章节、杂志 drop-cap 页码。
 
-![Hero Screenshot](docs/hero.png)
+🌐 **在线体验**：https://xhs-md2img.pages.dev/
 
 ---
 
@@ -262,38 +265,36 @@ export const myTheme: Theme = {
 
 ---
 
-## ☁️ Cloudflare Pages 部署
+## ☁️ 自动部署
 
-项目已配置为 **Next.js static export**，一次 build 产出 `out/` 纯静态目录，可直接部署到 Cloudflare Pages，**推送到 `main` 即自动构建上线**。
+项目通过 **GitHub Actions + Wrangler** 部署到 Cloudflare Pages，**`push origin main` 即触发构建上线**。
 
-### 一次性配置（大约 2 分钟）
+- 生产地址：https://xhs-md2img.pages.dev/
+- Workflow：[`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)
+- 每个 PR 自动生成 preview 部署（URL 形如 `https://<hash>.xhs-md2img.pages.dev`）
 
-1. 打开 [Cloudflare Dashboard](https://dash.cloudflare.com/) → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**
-2. 授权 GitHub 并选择本仓库 `xhs-md2img`
-3. 构建配置填入：
+### 流水线步骤
 
-| 字段 | 值 |
+1. `actions/checkout@v4` — 拉代码
+2. `pnpm/action-setup` + `actions/setup-node@v4`（Node 22，pnpm 10，自带 cache）
+3. `pnpm install --frozen-lockfile`
+4. `pnpm build`（Next.js static export → `out/`）
+5. `cloudflare/wrangler-action@v3` 把 `out/` 推到 Cloudflare Pages
+
+### 所需 GitHub Secrets
+
+已配置好：
+
+| Secret | 用途 |
 |---|---|
-| Framework preset | `Next.js (Static HTML Export)` |
-| Build command | `pnpm build` |
-| Build output directory | `out` |
-| Root directory | `/` |
-| Node.js version | `22`（或留空读 `.nvmrc`） |
+| `CLOUDFLARE_API_TOKEN` | Wrangler 鉴权 |
+| `CLOUDFLARE_ACCOUNT_ID` | 账户 ID |
 
-4. 点 **Save and Deploy**
-
-之后每次 `git push origin main`：
-
-- Cloudflare 拉最新代码
-- 自动跑 `pnpm install && pnpm build`
-- 把 `out/` 推到全球 CDN
-- 1-2 分钟后新版本生效
-
-Preview 部署（每个 PR / 非 main 分支）默认开启，URL 形如 `https://<hash>.xhs-md2img.pages.dev`。
+想 fork 自部署？只需在 `Repo → Settings → Secrets and variables → Actions` 加这两个 secret，把 workflow 里的 `--project-name=xhs-md2img` 改成你的 Pages 项目名即可。
 
 ### 静态导出说明
 
-- `next.config.mjs` 里 `output: 'export'`，所有路由在 build 时 prerender 成 HTML
+- `next.config.mjs` 设 `output: 'export'`，所有路由在 build 时 prerender 成 HTML
 - 页面均 `'use client'`，SPA 形态，无 SSR / 无 API routes
 - `public/_headers` 为 Cloudflare Pages 自定义缓存头：`_next/static/*` 一年 immutable，HTML 不缓存让发布即时生效
 - 不用 Cloudflare Workers 或 `@cloudflare/next-on-pages`，纯静态是最轻路径
