@@ -3,8 +3,11 @@
 import { useEditorStore } from '@/lib/store/useEditorStore';
 import { THEMES } from '@/lib/themes/registry';
 import { SIZE_PRESETS, type SizeId } from '@/lib/themes/types';
+import { TEMPLATES } from '@/lib/templates';
 
 export function Sidebar() {
+  const md = useEditorStore((s) => s.md);
+  const setMd = useEditorStore((s) => s.setMd);
   const themeId = useEditorStore((s) => s.themeId);
   const setThemeId = useEditorStore((s) => s.setThemeId);
   const sizeId = useEditorStore((s) => s.sizeId);
@@ -14,16 +17,57 @@ export function Sidebar() {
   const footer = useEditorStore((s) => s.footer);
   const setFooter = useEditorStore((s) => s.setFooter);
 
+  const applyTemplate = (tplId: string) => {
+    const tpl = TEMPLATES.find((t) => t.id === tplId);
+    if (!tpl) return;
+    const dirty = md.trim().length > 0 && md.trim() !== tpl.md.trim();
+    if (dirty && !confirm('当前编辑内容会被模板替换，继续吗？')) return;
+    setMd(tpl.md);
+    setThemeId(tpl.recommendTheme);
+  };
+
   return (
     <aside
-      className="h-full flex flex-col overflow-y-auto shrink-0"
+      className="h-full flex flex-col overflow-y-auto shrink-0 w-full lg:w-[276px]"
       style={{
-        width: 276,
         background: 'var(--paper)',
         borderRight: '1px solid var(--rule)',
       }}
     >
-      <Section number="I" title="Theme" caption="十二套主题">
+      <Section number="I" title="Templates" caption="一键载入">
+        <ul className="flex flex-col gap-px">
+          {TEMPLATES.map((tpl) => (
+            <li key={tpl.id}>
+              <button
+                onClick={() => applyTemplate(tpl.id)}
+                className="group w-full flex items-baseline gap-3 pl-2.5 pr-3 py-[7px] transition-colors text-left rounded-[3px]"
+                style={{ color: 'var(--ink-2)' }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'var(--tan-soft)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'transparent';
+                }}
+              >
+                <span
+                  className="text-[13px] font-medium tracking-tight"
+                  style={{ fontFamily: 'var(--font-sans)', color: 'var(--ink)' }}
+                >
+                  {tpl.name}
+                </span>
+                <span
+                  className="text-[11px] truncate"
+                  style={{ color: 'var(--muted)', fontFamily: 'var(--font-sans)' }}
+                >
+                  {tpl.tagline}
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </Section>
+
+      <Section number="II" title="Theme" caption="十二套主题">
         <ul className="flex flex-col gap-px">
           {THEMES.map((t) => {
             const active = t.id === themeId;
@@ -69,7 +113,7 @@ export function Sidebar() {
         </ul>
       </Section>
 
-      <Section number="II" title="Format" caption="尺寸档位">
+      <Section number="III" title="Format" caption="尺寸档位">
         <div className="flex flex-col gap-px">
           {SIZE_PRESETS.map((s) => {
             const active = s.id === sizeId;
@@ -105,7 +149,7 @@ export function Sidebar() {
         </div>
       </Section>
 
-      <Section number="III" title="Zoom" caption="预览缩放">
+      <Section number="IV" title="Zoom" caption="预览缩放">
         <div className="flex items-center gap-3">
           <input
             type="range"
@@ -125,7 +169,7 @@ export function Sidebar() {
         </div>
       </Section>
 
-      <Section number="IV" title="Colophon" caption="页脚与水印">
+      <Section number="V" title="Colophon" caption="页脚与水印">
         <div className="flex flex-col gap-2.5">
           <label className="flex items-center gap-2 text-[13px] cursor-pointer" style={{ color: 'var(--ink-2)' }}>
             <input

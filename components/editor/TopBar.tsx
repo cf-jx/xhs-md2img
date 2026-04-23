@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
 import { useEditorStore } from '@/lib/store/useEditorStore';
 import { exportAll, exportSingle } from '@/lib/export/toPng';
@@ -38,7 +39,7 @@ export function TopBar({ getCardRefs }: Props) {
     <header className="shrink-0">
       <div className="flex items-stretch h-[60px] px-7">
         {/* Wordmark — editorial masthead */}
-        <div className="flex items-center gap-3 pr-6">
+        <div className="flex items-center gap-3 pr-6 flex-1 md:flex-none md:min-w-0">
           <span
             aria-hidden
             className="inline-flex items-center justify-center"
@@ -57,8 +58,9 @@ export function TopBar({ getCardRefs }: Props) {
           >
             X
           </span>
-          <div className="flex flex-col leading-none gap-[3px]">
+          <div className="flex flex-col leading-none gap-[3px] min-w-0">
             <span
+              className="truncate"
               style={{
                 fontFamily: 'var(--font-display)',
                 fontSize: 17,
@@ -69,14 +71,14 @@ export function TopBar({ getCardRefs }: Props) {
             >
               XHS · Type Studio
             </span>
-            <span className="eyebrow" style={{ letterSpacing: '2.8px' }}>
+            <span className="eyebrow hidden sm:inline" style={{ letterSpacing: '2.8px' }}>
               Issue №1 · Markdown Edition
             </span>
           </div>
         </div>
 
         {/* Manifesto — hero identity line */}
-        <div className="flex-1 flex items-center justify-center px-8 min-w-0">
+        <div className="flex-1 hidden md:flex items-center justify-center px-8 min-w-0">
           <p
             className="byline truncate"
             style={{ fontSize: 14, color: 'var(--ink-3)' }}
@@ -96,17 +98,24 @@ export function TopBar({ getCardRefs }: Props) {
 
         {/* Actions */}
         <div className="flex items-center gap-2">
+          <Link
+            href="/themes"
+            className="ui-btn ui-btn-ghost hidden sm:inline-flex"
+            style={{ textDecoration: 'none' }}
+          >
+            主题画廊
+          </Link>
           <button
             onClick={handleExportSingle}
             disabled={busy !== 'none'}
-            className="ui-btn ui-btn-ghost"
+            className="ui-btn ui-btn-ghost hidden sm:inline-flex"
           >
             {busy === 'single' ? '导出中…' : '导出首图'}
           </button>
           <button
             onClick={handleExportAll}
             disabled={busy !== 'none'}
-            className="ui-btn ui-btn-primary"
+            className="ui-btn ui-btn-primary whitespace-nowrap"
           >
             <span>{busy === 'all' ? '打包中…' : '导出全部'}</span>
             <span aria-hidden style={{ opacity: 0.7 }}>↓</span>

@@ -123,7 +123,6 @@ function buildComponents(theme: Theme, isCover: boolean): Components {
         style={{
           fontSize: 'var(--fs-body)',
           lineHeight: 'var(--lh)',
-          color: isCover ? 'rgba(255,255,255,.75)' : ink,
           marginBottom: 12,
         }}
       >
@@ -241,13 +240,12 @@ function buildComponents(theme: Theme, isCover: boolean): Components {
       <blockquote
         style={{
           background: 'var(--c-quote-bg)',
-          borderLeft: `6px solid var(--c-quote-border)`,
           padding: '24px 32px',
           margin: '12px 0',
           fontSize: 'var(--fs-body)',
           lineHeight: 'var(--lh)',
-          color: isCover ? 'rgba(255,255,255,.85)' : ink,
-          borderRadius: '0 8px 8px 0',
+          color: 'var(--c-quote-ink)',
+          borderRadius: 8,
           fontStyle: 'italic',
         }}
       >

@@ -32,6 +32,7 @@ export const CardFrame = forwardRef<HTMLDivElement, Props>(function CardFrame(
     '--c-code-ink': t.codeInk,
     '--c-quote-bg': t.quoteBg ?? t.accentSoft,
     '--c-quote-border': t.quoteBorder ?? t.accent,
+    '--c-quote-ink': t.quoteInk ?? t.ink,
     '--font-title': theme.typography.titleFamily,
     '--font-body': theme.typography.bodyFamily,
     '--fs-h1': `${theme.typography.h1Size}px`,

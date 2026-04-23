@@ -1,17 +1,18 @@
-export type SizeId = 'xhs-3-4' | 'xhs-4-5' | 'square' | 'story-9-16';
+export type SizeId = 'xhs-3-4' | 'xhs-4-5' | 'square' | 'landscape-4-3';
 
 export type SizePreset = {
   id: SizeId;
   label: string;
+  hint: string;
   width: number;
   height: number;
 };
 
 export const SIZE_PRESETS: SizePreset[] = [
-  { id: 'xhs-3-4', label: '小红书竖版 3:4', width: 1080, height: 1440 },
-  { id: 'xhs-4-5', label: '小红书 4:5', width: 1080, height: 1350 },
-  { id: 'square', label: '正方形 1:1', width: 1080, height: 1080 },
-  { id: 'story-9-16', label: '故事 9:16', width: 1080, height: 1920 },
+  { id: 'xhs-3-4', label: '竖版 3:4', hint: '小红书主流', width: 1080, height: 1440 },
+  { id: 'xhs-4-5', label: '长竖 4:5', hint: '信息流最大展示', width: 1080, height: 1350 },
+  { id: 'square', label: '方图 1:1', hint: '稳妥通用', width: 1080, height: 1080 },
+  { id: 'landscape-4-3', label: '横版 4:3', hint: '横图/引用', width: 1440, height: 1080 },
 ];
 
 export type ThemeTokens = {
@@ -28,6 +29,7 @@ export type ThemeTokens = {
   coverInk?: string;
   quoteBg?: string;
   quoteBorder?: string;
+  quoteInk?: string;
 };
 
 export type ThemeTypography = {

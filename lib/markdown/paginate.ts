@@ -1,4 +1,5 @@
-import type { SizeId } from '@/lib/themes/types';
+import type { SizeId, Theme } from '@/lib/themes/types';
+import { SIZE_PRESETS } from '@/lib/themes/types';
 
 export type Page = {
   index: number;
@@ -8,16 +9,11 @@ export type Page = {
 
 const EXPLICIT_BREAK = /\n\s*(?:---+|<!--\s*pagebreak\s*-->)\s*\n/g;
 
-// Character budgets per size — conservative, leaves room for padding / footer.
-// Tuned for default body size 28-30px with line-height 1.7.
-const CHAR_BUDGET: Record<SizeId, number> = {
-  'xhs-3-4': 420,
-  'xhs-4-5': 400,
-  square: 320,
-  'story-9-16': 560,
-};
+// Body padding matches MarkdownCard.tsx (96 top + 40 bottom) plus footer strip.
+const BODY_PADDING_PX = 96 + 40 + 60;
+// Cover padding is larger — but covers are never auto-split, so this value is informational.
 
-export function paginate(md: string, sizeId: SizeId = 'xhs-3-4'): Page[] {
+export function paginate(md: string, sizeId: SizeId = 'xhs-3-4', theme?: Theme): Page[] {
   const trimmed = md.trim();
   if (!trimmed) return [{ index: 0, md: '', isCover: true }];
 
@@ -30,16 +26,24 @@ export function paginate(md: string, sizeId: SizeId = 'xhs-3-4'): Page[] {
     return [{ index: 0, md: trimmed, isCover: true }];
   }
 
-  const budget = CHAR_BUDGET[sizeId] ?? 420;
+  const size = SIZE_PRESETS.find((s) => s.id === sizeId) ?? SIZE_PRESETS[0];
+  const budgetPx = size.height - BODY_PADDING_PX;
+  const contentWidth = size.width - 80 * 2;
+
   const finalChunks: string[] = [];
   for (let i = 0; i < explicitChunks.length; i++) {
     const chunk = explicitChunks[i];
     // Never auto-split the cover chunk — covers are intentionally compact.
     const isCover = i === 0 && startsWithH1(chunk);
-    if (isCover || weight(chunk) <= budget) {
+    if (isCover) {
+      finalChunks.push(chunk);
+      continue;
+    }
+    const total = measureChunk(chunk, theme, contentWidth);
+    if (total <= budgetPx) {
       finalChunks.push(chunk);
     } else {
-      finalChunks.push(...autoSplit(chunk, budget));
+      finalChunks.push(...autoSplit(chunk, budgetPx, theme, contentWidth));
     }
   }
 
@@ -50,28 +54,99 @@ export function paginate(md: string, sizeId: SizeId = 'xhs-3-4'): Page[] {
   }));
 }
 
-function autoSplit(chunk: string, budget: number): string[] {
+function autoSplit(chunk: string, budget: number, theme: Theme | undefined, contentWidth: number): string[] {
   const blocks = splitBlocks(chunk);
   const out: string[] = [];
   let buf: string[] = [];
   let used = 0;
   for (let i = 0; i < blocks.length; i++) {
     const b = blocks[i];
-    const w = weight(b);
-    // Keep heading with the block that follows it — do not flush if current
-    // buffer ends with a heading-only line.
+    const h = blockHeightPx(b, theme, contentWidth);
+    // Keep heading with the block that follows it.
     const bufEndsWithHeading = buf.length > 0 && isHeadingOnly(buf[buf.length - 1]);
 
-    if (used + w > budget && buf.length > 0 && !bufEndsWithHeading) {
+    if (used + h > budget && buf.length > 0 && !bufEndsWithHeading) {
       out.push(buf.join('\n\n'));
       buf = [];
       used = 0;
     }
     buf.push(b);
-    used += w + 24; // per-block padding
+    used += h + 20;
   }
   if (buf.length) out.push(buf.join('\n\n'));
   return out.length > 0 ? out : [chunk];
+}
+
+function measureChunk(chunk: string, theme: Theme | undefined, contentWidth: number): number {
+  const blocks = splitBlocks(chunk);
+  let sum = 0;
+  for (const b of blocks) sum += blockHeightPx(b, theme, contentWidth) + 20;
+  return sum;
+}
+
+// Approximate rendered pixel height for a single block.
+// Uses theme typography so different themes get different budgets.
+function blockHeightPx(block: string, theme: Theme | undefined, contentWidth: number): number {
+  const t = theme?.typography;
+  const bodySize = t?.bodySize ?? 30;
+  const h1 = t?.h1Size ?? 80;
+  const h2 = t?.h2Size ?? 52;
+  const h3 = t?.h3Size ?? 36;
+  const lh = t?.lineHeight ?? 1.7;
+  const bodyLh = bodySize * lh;
+
+  // Characters per line: CJK ~0.55 em/char, ASCII ~0.42 em/char.
+  // Mixed content: use 0.55 as conservative estimator (CJK dominant).
+  const charWidthPx = bodySize * 0.58;
+  const cpl = Math.max(12, Math.floor(contentWidth / charWidthPx));
+
+  const text = stripMd(block);
+  const weighted = weightChars(text);
+  const wrappedLines = Math.max(1, Math.ceil(weighted / cpl));
+
+  const trimmed = block.trim();
+
+  if (/^#\s+/.test(trimmed)) {
+    // h1 — rarely appears in body (covers take h1), but be generous
+    return h1 * 1.15 + 32;
+  }
+  if (/^##\s+/.test(trimmed)) {
+    return h2 * 1.3 + 32;
+  }
+  if (/^###\s+/.test(trimmed)) {
+    return h3 * 1.35 + 28;
+  }
+  if (trimmed.startsWith('```')) {
+    const lines = block.split('\n').length;
+    return lines * (22 * 1.55) + 48 + 24;
+  }
+  if (/^>/m.test(trimmed)) {
+    return wrappedLines * bodyLh + 48 + 24;
+  }
+  // list (ordered or unordered) — one line per item, plus gaps
+  if (/^\s*(?:[-*+]|\d+\.)\s/m.test(trimmed)) {
+    const items = block.split('\n').filter((l) => /^\s*(?:[-*+]|\d+\.)\s/.test(l));
+    let listH = 0;
+    for (const it of items) {
+      const itemText = stripMd(it.replace(/^\s*(?:[-*+]|\d+\.)\s+/, ''));
+      const itemWeighted = weightChars(itemText);
+      const itemLines = Math.max(1, Math.ceil(itemWeighted / (cpl - 4)));
+      listH += itemLines * bodyLh;
+    }
+    listH += items.length * 16 + 24;
+    return listH;
+  }
+  if (trimmed === '---') return 18;
+  // paragraph
+  return wrappedLines * bodyLh + 12;
+}
+
+function weightChars(text: string): number {
+  let n = 0;
+  for (const ch of text) {
+    n += /[\u4e00-\u9fff\u3000-\u303f\uff00-\uffef]/.test(ch) ? 2 : 1;
+  }
+  return n;
 }
 
 function splitBlocks(chunk: string): string[] {
@@ -103,24 +178,6 @@ function splitBlocks(chunk: string): string[] {
   }
   flush();
   return blocks;
-}
-
-function weight(block: string): number {
-  // Approx rendered char cost; CJK counts heavier than ASCII.
-  const text = stripMd(block);
-  let n = 0;
-  for (const ch of text) {
-    n += /[\u4e00-\u9fff\u3000-\u303f\uff00-\uffef]/.test(ch) ? 2 : 1;
-  }
-  // Block type surcharges.
-  if (/^#{1,3}\s/.test(block.trim())) n += 40;            // heading occupies extra vertical space
-  if (/^>/m.test(block)) n += 30;                         // blockquote padding
-  if (/^\s*(?:[-*+]|\d+\.)\s/m.test(block)) {
-    const items = block.split('\n').filter((l) => /^\s*(?:[-*+]|\d+\.)\s/.test(l)).length;
-    n += items * 12;                                      // list item spacing
-  }
-  if (block.includes('```')) n += 60;                     // code block padding
-  return n;
 }
 
 function stripMd(s: string): string {

@@ -133,49 +133,51 @@ html, body {
 }
 .ui-input::placeholder { color: var(--ink-3); opacity: 0.6; }
 
-.ui-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  height: 34px;
-  padding: 0 14px;
-  border-radius: 4px;
-  font-family: var(--font-sans);
-  font-size: var(--fs-sm);
-  font-weight: 500;
-  letter-spacing: 0.1px;
-  cursor: pointer;
-  transition: background .15s, border-color .15s, color .15s, transform .1s;
-  border: 1px solid var(--rule-strong);
-  background: var(--surface);
-  color: var(--ink);
-}
-.ui-btn:hover:not(:disabled) {
-  background: var(--tan-soft);
-  border-color: var(--tan);
-}
-.ui-btn:active:not(:disabled) { transform: translateY(1px); }
-.ui-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+@layer components {
+  .ui-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    height: 34px;
+    padding: 0 14px;
+    border-radius: 4px;
+    font-family: var(--font-sans);
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    letter-spacing: 0.1px;
+    cursor: pointer;
+    transition: background .15s, border-color .15s, color .15s, transform .1s;
+    border: 1px solid var(--rule-strong);
+    background: var(--surface);
+    color: var(--ink);
+  }
+  .ui-btn:hover:not(:disabled) {
+    background: var(--tan-soft);
+    border-color: var(--tan);
+  }
+  .ui-btn:active:not(:disabled) { transform: translateY(1px); }
+  .ui-btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
-.ui-btn-primary {
-  background: var(--ink);
-  color: var(--paper);
-  border-color: var(--ink);
-}
-.ui-btn-primary:hover:not(:disabled) {
-  background: var(--terra);
-  border-color: var(--terra);
-  color: #FFFFFF;
-}
+  .ui-btn-primary {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+  .ui-btn-primary:hover:not(:disabled) {
+    background: var(--terra);
+    border-color: var(--terra);
+    color: #FFFFFF;
+  }
 
-.ui-btn-ghost {
-  background: transparent;
-  border-color: transparent;
-  color: var(--ink-2);
-}
-.ui-btn-ghost:hover:not(:disabled) {
-  background: var(--tan-soft);
-  color: var(--ink);
+  .ui-btn-ghost {
+    background: transparent;
+    border-color: transparent;
+    color: var(--ink-2);
+  }
+  .ui-btn-ghost:hover:not(:disabled) {
+    background: var(--tan-soft);
+    color: var(--ink);
+  }
 }
 
 .ui-checkbox {
