@@ -262,6 +262,44 @@ export const myTheme: Theme = {
 
 ---
 
+## ☁️ Cloudflare Pages 部署
+
+项目已配置为 **Next.js static export**，一次 build 产出 `out/` 纯静态目录，可直接部署到 Cloudflare Pages，**推送到 `main` 即自动构建上线**。
+
+### 一次性配置（大约 2 分钟）
+
+1. 打开 [Cloudflare Dashboard](https://dash.cloudflare.com/) → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**
+2. 授权 GitHub 并选择本仓库 `xhs-md2img`
+3. 构建配置填入：
+
+| 字段 | 值 |
+|---|---|
+| Framework preset | `Next.js (Static HTML Export)` |
+| Build command | `pnpm build` |
+| Build output directory | `out` |
+| Root directory | `/` |
+| Node.js version | `22`（或留空读 `.nvmrc`） |
+
+4. 点 **Save and Deploy**
+
+之后每次 `git push origin main`：
+
+- Cloudflare 拉最新代码
+- 自动跑 `pnpm install && pnpm build`
+- 把 `out/` 推到全球 CDN
+- 1-2 分钟后新版本生效
+
+Preview 部署（每个 PR / 非 main 分支）默认开启，URL 形如 `https://<hash>.xhs-md2img.pages.dev`。
+
+### 静态导出说明
+
+- `next.config.mjs` 里 `output: 'export'`，所有路由在 build 时 prerender 成 HTML
+- 页面均 `'use client'`，SPA 形态，无 SSR / 无 API routes
+- `public/_headers` 为 Cloudflare Pages 自定义缓存头：`_next/static/*` 一年 immutable，HTML 不缓存让发布即时生效
+- 不用 Cloudflare Workers 或 `@cloudflare/next-on-pages`，纯静态是最轻路径
+
+---
+
 ## 📄 License
 
 MIT

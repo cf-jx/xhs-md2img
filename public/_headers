@@ -1,0 +1,7 @@
+# Long cache for immutable Next.js assets
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Short cache for HTML so deploys propagate quickly
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate

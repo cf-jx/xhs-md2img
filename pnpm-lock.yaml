@@ -11,9 +11,18 @@ importers:
       '@codemirror/lang-markdown':
         specifier: 6.3.1
         version: 6.3.1
+      '@codemirror/language':
+        specifier: ^6.12.3
+        version: 6.12.3
       '@codemirror/theme-one-dark':
         specifier: 6.1.2
         version: 6.1.2
+      '@codemirror/view':
+        specifier: ^6.41.1
+        version: 6.41.1
+      '@lezer/highlight':
+        specifier: ^1.2.3
+        version: 1.2.3
       '@uiw/react-codemirror':
         specifier: 4.23.7
         version: 4.23.7(@babel/runtime@7.29.2)(@codemirror/autocomplete@6.20.1)(@codemirror/language@6.12.3)(@codemirror/lint@6.9.5)(@codemirror/search@6.7.0)(@codemirror/state@6.6.0)(@codemirror/theme-one-dark@6.1.2)(@codemirror/view@6.41.1)(codemirror@6.0.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
